@@ -59,7 +59,7 @@ public class Nodo {
         return this.derecha == null;
     }
     
-    public Nodo traerContenido(Nodo nodo){
+    /*public Nodo traerContenido(Nodo nodo){
         Nodo temp = new Nodo();
         if (nodo.tieneIzquierda()) {
             temp.setRaiz(nodo.getIzquierda());
@@ -70,5 +70,5 @@ public class Nodo {
         }
         System.out.println(nodo.getValor());
         return traerContenido(nodo);
-    }
+    }*/
 }
