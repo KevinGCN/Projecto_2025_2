@@ -7,6 +7,9 @@ public class Jugador {
     private Cola<Carta> colaEspera;
     private Pila pilaDescarte;
 
+    public Jugador() {
+    }
+        
     public Jugador(String nombre) {
         this.nombre = nombre;
         this.mazo = new ListaCartas();
@@ -30,13 +33,8 @@ public class Jugador {
         return pilaDescarte;
     }
 
-    public boolean tieneCartasVivas() {
-        for (int i = 0; i < mazo.tamaño(); i++) {
-            if (mazo.obtener(i).getVida() > 0) {
-                return true;
-            }
-        }
-        return false;
+    public boolean tieneCartas(ListaCartas mazo){
+        return mazo.tamaño() != 0;
     }
 }
 
