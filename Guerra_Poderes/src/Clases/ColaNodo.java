@@ -2,25 +2,22 @@ package Clases;
 
 public class ColaNodo {
 
-    private Jugador nombre;
+    private Jugador jugador;
     private ColaNodo izquierda;
     private ColaNodo derecha;
 
-    public ColaNodo() {
-    }
-
-    public ColaNodo(Jugador nombre) {
-        this.nombre = nombre;
+    public ColaNodo(Jugador jugador) {
+        this.jugador = jugador;
         this.izquierda = null;
         this.derecha = null;
     }
 
-    public Jugador getNombre() {
-        return nombre;
+    public Jugador getJugador() {
+        return jugador;
     }
 
-    public void setNombre(Jugador nombre) {
-        this.nombre = nombre;
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
     }
 
     public ColaNodo getIzquierda() {
@@ -37,13 +34,5 @@ public class ColaNodo {
 
     public void setDerecha(ColaNodo derecha) {
         this.derecha = derecha;
-    }
-
-    public boolean tieneIzquierda() {
-        return this.izquierda != null;
-    }
-
-    public boolean tieneDerecha() {
-        return this.derecha != null;
     }
 }
