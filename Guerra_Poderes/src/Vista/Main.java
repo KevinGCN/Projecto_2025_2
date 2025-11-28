@@ -3,7 +3,6 @@ import java.util.Scanner;
 import Controlador.JuegoGuerra;
 import Modelo.CrearCartas;
 import Modelo.Jugador;
-import Modelo.Pila;
 
 public class Main {
 
@@ -31,7 +30,7 @@ public class Main {
         }
          //5.Llamado de Menu
          Controlador.Menu menu = new Controlador.Menu();
-         menu.menu(jugador, computadora);
+         menu.iniciarCombate(jugador, jugador);
         
     }
 

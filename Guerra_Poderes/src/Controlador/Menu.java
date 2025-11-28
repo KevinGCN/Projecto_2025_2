@@ -1,85 +1,107 @@
 package Controlador;
+
 import Modelo.Carta;
 import Modelo.Jugador;
 import java.util.Scanner;
-/**
- *
- * @author carli
- */
+
 public class Menu {
-    public void menu(Jugador jugador, Jugador computadora){
-        int contadorJugador = 0;
-        int contadorCPU = 0;
-        Scanner sc = new Scanner(System.in);
-        MotorBatalla batalla = new MotorBatalla();
-        
-        // 5. Seleccionar carta inicial
-        System.out.print("\nSelecciona una carta para combatir: ");
-        int indice = sc.nextInt();
-        Carta cartaJugador = jugador.getMazo().obtener(indice);
 
-        // CPU elige carta
-        int aleatoria = (int) (Math.random() * computadora.getMazo().tamaño());
-        Carta cartaCPU = computadora.getMazo().obtener(aleatoria);
-        System.out.println("\nLa computadora elige: " + cartaCPU.getNombre());
+    private final MotorBatalla motor = new MotorBatalla();
+    private final Scanner sc = new Scanner(System.in);
 
-        //6.Muestreo de acciones y menu
-        do {
-            // --- COMBATE ---
-            System.out.println("\n>>> TU ATACAS PRIMERO");
-            batalla.atacar(cartaJugador, cartaCPU);
+    /**
+     * Arranca el ciclo de combate entre dos jugadores.
+     */
+    public void iniciarCombate(Jugador jugador, Jugador cpu) {
 
-            if (cartaCPU.getVida() > 0) {
-                System.out.println("\n>>> LA COMPUTADORA ATACA");
-                batalla.atacar(cartaCPU, cartaJugador);
-            }
+        Carta cartaJugador = seleccionarCartaInicial(jugador);
+        Carta cartaCPU = seleccionarCartaCPU(cpu);
 
-            // RESULTADOS
-            System.out.println("\n--- RESULTADO ---");
-            System.out.println("Tu carta: " + cartaJugador);
-            System.out.println("Carta computadora: " + cartaCPU);
+        int ganadasJugador = 0;
+        int ganadasCPU = 0;
 
-            // CARTA DEL JUGADOR MUERE
+        while (cartaJugador != null && cartaCPU != null) {
+
+            ejecutarRonda(cartaJugador, cartaCPU);
+
             if (cartaJugador.getVida() <= 0) {
-                System.out.println("\nPerdiste la Batalla");
-                contadorCPU++;
-                computadora.setRondasG(contadorCPU);
+                ganadasCPU++;
+                manejarDerrotaJugador(jugador, cpu, cartaJugador, cartaCPU);
+                cartaJugador = siguienteCarta(jugador);
 
-                jugador.getPilaDescarte().push(cartaJugador);
-                jugador.getMazo().eliminarCarta(cartaJugador);
-
-                // pasar a siguiente carta del mazo
-                if (jugador.getMazo().tamaño() > 0) {
-                    cartaJugador = jugador.getMazo().obtener(0);
-                } else {
-                    cartaJugador = null;
-                }
-            } // CARTA DE CPU MUERE
-            else if (cartaCPU.getVida() <= 0) {
-                System.out.println("\nGanaste la Batalla");
-                contadorJugador++;
-                jugador.setRondasG(contadorJugador);
-
-                computadora.getPilaDescarte().push(cartaCPU);
-                computadora.getMazo().eliminarCarta(cartaCPU);
-
-                // CPU toma nueva carta
-                if (computadora.getMazo().tamaño() > 0) {
-                    int nueva = (int) (Math.random() * computadora.getMazo().tamaño());
-                    cartaCPU = computadora.getMazo().obtener(nueva);
-                } else {
-                    cartaCPU = null;
-                }
+            } else if (cartaCPU.getVida() <= 0) {
+                ganadasJugador++;
+                manejarDerrotaCPU(jugador, cpu, cartaJugador, cartaCPU);
+                cartaCPU = seleccionarCartaCPU(cpu);
             }
+        }
 
-            // Si ambas viven, continúa siguiente ronda automáticamente
-        } while (cartaJugador != null && cartaCPU != null);
+        mostrarResultadosFinales(jugador, ganadasJugador, ganadasCPU);
+    }
 
-        // FIN DEL JUEGO
+    // ======================================================
+    // MÉTODOS LIMPIOS – RESPONSABILIDAD ÚNICA
+    // ======================================================
+
+    private Carta seleccionarCartaInicial(Jugador jugador) {
+        System.out.println("\nSelecciona una carta para combatir:");
+        int indice = sc.nextInt();
+        return jugador.getMazo().obtener(indice);
+    }
+
+    private Carta seleccionarCartaCPU(Jugador cpu) {
+        int index = (int) (Math.random() * cpu.getMazo().tamaño());
+        Carta cartaCPU = cpu.getMazo().obtener(index);
+        System.out.println("\nLa computadora elige: " + cartaCPU.getNombre());
+        return cartaCPU;
+    }
+
+    private void ejecutarRonda(Carta cartaJugador, Carta cartaCPU) {
+        System.out.println("\n>>> TU ATACAS PRIMERO");
+        motor.atacar(cartaJugador, cartaCPU);
+
+        if (cartaCPU.getVida() > 0) {
+            System.out.println("\n>>> LA COMPUTADORA ATACA");
+            motor.atacar(cartaCPU, cartaJugador);
+        }
+
+        mostrarResultadoRonda(cartaJugador, cartaCPU);
+    }
+
+    private void mostrarResultadoRonda(Carta j, Carta c) {
+        System.out.println("\n--- RESULTADO ---");
+        System.out.println("Tu carta: " + j);
+        System.out.println("Carta computadora: " + c);
+    }
+
+    private void manejarDerrotaJugador(Jugador jugador, Jugador cpu, Carta cartaJugador, Carta cartaCPU) {
+        System.out.println("\nPerdiste la batalla");
+
+        jugador.getPilaDescarte().push(cartaJugador);
+        jugador.getMazo().eliminarCarta(cartaJugador);
+
+        cpu.getColaEspera().encolar(cartaCPU);
+    }
+
+    private void manejarDerrotaCPU(Jugador jugador, Jugador cpu, Carta cartaJugador, Carta cartaCPU) {
+        System.out.println("\nGanaste la batalla");
+
+        cpu.getPilaDescarte().push(cartaCPU);
+        cpu.getMazo().eliminarCarta(cartaCPU);
+
+        jugador.getColaEspera().encolar(cartaJugador);
+    }
+
+    private Carta siguienteCarta(Jugador jugador) {
+        if (jugador.getMazo().tamaño() == 0) return null;
+        return jugador.getMazo().obtener(0);
+    }
+
+    private void mostrarResultadosFinales(Jugador j, int wins, int loses) {
         System.out.println("\n=====================");
         System.out.println("RESULTADOS FINALES");
         System.out.println("=====================");
-        System.out.println("Batallas Ganadas: " + contadorJugador);
-        System.out.println("Batallas Perdidas: " + contadorCPU);
+        System.out.println(j.getNombre() + " Ganó: " + wins);
+        System.out.println(j.getNombre() + " Perdió: " + loses);
     }
 }
