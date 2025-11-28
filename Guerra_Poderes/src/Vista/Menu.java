@@ -24,12 +24,12 @@ public class Menu {
         while (cartaJugador != null && cartaCPU != null) {
 
             ejecutarRonda(cartaJugador, cartaCPU);
-
+            //jugador pierde ronda
             if (cartaJugador.getVida() <= 0) {
                 ganadasCPU++;
                 manejarDerrotaJugador(jugador, cpu, cartaJugador, cartaCPU);
                 cartaJugador = siguienteCarta(jugador);
-
+            //CPU perdio ronda
             } else if (cartaCPU.getVida() <= 0) {
                 ganadasJugador++;
                 manejarDerrotaCPU(jugador, cpu, cartaJugador, cartaCPU);
@@ -49,7 +49,8 @@ public class Menu {
         int indice = sc.nextInt();
         return jugador.getMazo().obtener(indice);
     }
-
+    
+    //carta random para CPU
     private Carta seleccionarCartaCPU(Jugador cpu) {
         int index = (int) (Math.random() * cpu.getMazo().tamaño());
         Carta cartaCPU = cpu.getMazo().obtener(index);
@@ -92,12 +93,13 @@ public class Menu {
 
         jugador.getColaEspera().encolar(cartaJugador);
     }
-
+    
+    //obtenemos la siguiente carta del jugador que perdio
     private Carta siguienteCarta(Jugador jugador) {
         if (jugador.getMazo().tamaño() == 0) return null;
         return jugador.getMazo().obtener(0);
     }
-
+    
     private void mostrarResultadosFinales(Jugador j, int wins, int loses) {
         System.out.println("\n=====================");
         System.out.println("RESULTADOS FINALES");

@@ -30,7 +30,7 @@ public class Main {
         }
          //5.Llamado de Menu
          Vista.Menu menu = new Vista.Menu();
-         menu.iniciarCombate(jugador, jugador);
+         menu.iniciarCombate(jugador, computadora);
         
     }
 
