@@ -1,4 +1,6 @@
-package Modelo;
+package Controlador;
+
+import Modelo.Jugador;
 
 public class JuegoGuerra {
 

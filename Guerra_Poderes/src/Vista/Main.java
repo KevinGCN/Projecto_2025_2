@@ -1,7 +1,7 @@
 package Vista;
 
 import Modelo.Carta;
-import Modelo.JuegoGuerra;
+import Controlador.JuegoGuerra;
 import Controlador.MotorBatalla;
 import Modelo.Jugador;
 import java.util.Scanner;

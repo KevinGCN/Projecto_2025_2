@@ -1,6 +1,6 @@
 package Modelo;
 /**
- *Representa una carta tipo Pokémon con atributos básicos.
+ *Representa una carta tipo JuGiOh con atributos básicos.
  * @author Tilines
  */
 public class Carta {
