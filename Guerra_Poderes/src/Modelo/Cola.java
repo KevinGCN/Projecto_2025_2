@@ -1,13 +1,15 @@
 package Modelo;
+
 /**
- *Cola implementada con nodos enlazados (FIFO).
+ * Cola simple con nodos enlazados (FIFO).
  * @author Tilines
  */
 public class Cola<T> {
 
+    // Nodo interno de la cola
     private class NodoCola {
-        T dato;
-        NodoCola siguiente;
+        T dato;               // Dato guardado
+        NodoCola siguiente;   // Siguiente nodo
 
         public NodoCola(T dato) {
             this.dato = dato;
@@ -15,15 +17,15 @@ public class Cola<T> {
         }
     }
 
-    private NodoCola frente;
-    private NodoCola fin;
+    private NodoCola frente; // Primer elemento
+    private NodoCola fin;    // Último elemento
 
     public Cola() {
         this.frente = null;
         this.fin = null;
     }
 
-    // Encolar
+    // Agrega un elemento al final
     public void encolar(T dato) {
         NodoCola nuevo = new NodoCola(dato);
         if (estaVacia()) {
@@ -35,7 +37,7 @@ public class Cola<T> {
         }
     }
 
-    // Desencolar
+    // Saca el primer elemento
     public T desencolar() {
         if (estaVacia()) {
             return null;
@@ -48,17 +50,17 @@ public class Cola<T> {
         return dato;
     }
 
-    // Ver el primero
+    // Ver el primer elemento sin sacarlo
     public T peek() {
         return estaVacia() ? null : frente.dato;
     }
 
-    // Ver si está vacía
+    // Verifica si la cola está vacía
     public boolean estaVacia() {
         return frente == null;
     }
 
-    // Obtener tamaño
+    // Devuelve cuántos elementos hay
     public int tamaño() {
         int count = 0;
         NodoCola aux = frente;

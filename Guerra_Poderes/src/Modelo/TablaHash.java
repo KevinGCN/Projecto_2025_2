@@ -1,19 +1,31 @@
 package Modelo;
+
 /**
- *Guarda estadísticas del jugador.
+ * Guarda estadísticas del jugador.
  * @author Tilines
  */
 public class TablaHash {
+
+    // Jugador al que pertenecen los datos
     private Jugador jugador;
+
+    // Número de rondas ganadas
     private int rondasGanadas;
+
+    // Cartas que el jugador ha jugado
     private ListaCartas cartasJugadas;
+
+    // Cartas que el jugador ha derrotado
     private ListaCartas cartasDerrotadas;
+
+    // Poder total ganado
     private int poderGanado;
 
     public TablaHash() {
     }
 
-    public TablaHash(Jugador jugador, int rondasGanadas, ListaCartas cartasJugadas, ListaCartas cartasDerrotadas, int poderGanado) {
+    public TablaHash(Jugador jugador, int rondasGanadas, ListaCartas cartasJugadas,
+                     ListaCartas cartasDerrotadas, int poderGanado) {
         this.jugador = jugador;
         this.rondasGanadas = rondasGanadas;
         this.cartasJugadas = cartasJugadas;
