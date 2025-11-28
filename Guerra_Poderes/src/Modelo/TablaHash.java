@@ -24,20 +24,21 @@ public class TablaHash {
     }
 
     private Nodo[] tabla;
-    private int capacidad = 20; // tamaño del array
+    private int capacidad = 20; // tamaño 
 
     public TablaHash() {
         tabla = new Nodo[capacidad];
     }
 
     // Función hash básica
-    private int hash(String clave) {
-        int h = 0;
-        for (char c : clave.toCharArray()) {
-            h += c;
-        }
-        return h % capacidad;
+private int hash(String clave) {
+    int suma = 0;
+    for (char letra : clave.toCharArray()) {
+        suma += letra;
     }
+    return suma % capacidad;
+}
+
 
     // Insertar o actualizar
     public void put(String clave, int valor) {
