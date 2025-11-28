@@ -3,6 +3,10 @@ package Modelo;
 /**
  * Pila simple para guardar cartas descartadas (LIFO).
  * @author Tilines
+ * Complejidad BIG-O:
+ * - push()  -> O(1)
+ * - pop()   -> O(1)
+ * - vacia() -> O(1)
  */
 public class Pila {
 

@@ -3,6 +3,8 @@ package Modelo;
 /**
  * Guarda estadísticas del jugador.
  * @author Tilines
+ *Complejidad BIG-O:
+ * - getters y setters -> O(1)
  */
 public class TablaHash {
 

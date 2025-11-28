@@ -3,6 +3,12 @@ package Modelo;
 /**
  * Cola simple con nodos enlazados (FIFO).
  * @author Tilines
+ * Complejidad BIG-O:
+ * - encolar()    -> O(1)
+ * - desencolar() -> O(1)
+ * - peek()       -> O(1)
+ * - estaVacia()  -> O(1)
+ * - tamaño()     -> O(n)  (recorre todos los nodos)
  */
 public class Cola<T> {
 
