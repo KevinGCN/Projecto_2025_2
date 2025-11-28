@@ -11,7 +11,7 @@ public class Menu {
     private final Scanner sc = new Scanner(System.in);
 
     /**
-     * Arranca el ciclo de combate entre dos jugadores.
+     * Ciclo principal de combate entre jugador y CPU.
      */
     public void iniciarCombate(Jugador jugador, Jugador cpu) {
 
@@ -24,12 +24,12 @@ public class Menu {
         while (cartaJugador != null && cartaCPU != null) {
 
             ejecutarRonda(cartaJugador, cartaCPU);
-            //jugador pierde ronda
+
+            // Validar derrotas según árbol de decisiones
             if (cartaJugador.getVida() <= 0) {
                 ganadasCPU++;
                 manejarDerrotaJugador(jugador, cpu, cartaJugador, cartaCPU);
                 cartaJugador = siguienteCarta(jugador);
-            //CPU perdio ronda
             } else if (cartaCPU.getVida() <= 0) {
                 ganadasJugador++;
                 manejarDerrotaCPU(jugador, cpu, cartaJugador, cartaCPU);
@@ -41,70 +41,94 @@ public class Menu {
     }
 
     // ======================================================
-    // MÉTODOS LIMPIOS – RESPONSABILIDAD ÚNICA
+    // MÉTODOS SIMPLES – RESPONSABILIDAD ÚNICA
     // ======================================================
 
     private Carta seleccionarCartaInicial(Jugador jugador) {
-        System.out.println("\nSelecciona una carta para combatir:");
+        System.out.println("\nSelecciona una carta para iniciar combate:");
         int indice = sc.nextInt();
-        return jugador.getMazo().obtener(indice);
+        Carta seleccionada = jugador.getMazo().obtener(indice);
+
+        // Asegurar que no se seleccione una carta muerta
+        while (seleccionada.getVida() <= 0) {
+            System.out.println("Esa carta ya está derrotada. Selecciona otra:");
+            indice = sc.nextInt();
+            seleccionada = jugador.getMazo().obtener(indice);
+        }
+        return seleccionada;
     }
-    
-    //carta random para CPU
+
     private Carta seleccionarCartaCPU(Jugador cpu) {
+        if (cpu.getMazo().tamaño() == 0) return null;
+
         int index = (int) (Math.random() * cpu.getMazo().tamaño());
-        Carta cartaCPU = cpu.getMazo().obtener(index);
-        System.out.println("\nLa computadora elige: " + cartaCPU.getNombre());
-        return cartaCPU;
-    }
+        Carta carta = cpu.getMazo().obtener(index);
 
-    private void ejecutarRonda(Carta cartaJugador, Carta cartaCPU) {
-        System.out.println("\n>>> TU ATACAS PRIMERO");
-        motor.atacar(cartaJugador, cartaCPU);
-
-        if (cartaCPU.getVida() > 0) {
-            System.out.println("\n>>> LA COMPUTADORA ATACA");
-            motor.atacar(cartaCPU, cartaJugador);
+        // Evitar que CPU elija una carta muerta
+        while (carta.getVida() <= 0) {
+            index = (int) (Math.random() * cpu.getMazo().tamaño());
+            carta = cpu.getMazo().obtener(index);
         }
 
-        mostrarResultadoRonda(cartaJugador, cartaCPU);
+        System.out.println("\nLa computadora elige: " + carta.getNombre());
+        return carta;
+    }
+
+    private void ejecutarRonda(Carta j, Carta c) {
+        System.out.println("\n>>> TU ATACAS");
+
+        motor.atacar(j, c);
+
+        if (c.getVida() > 0) {
+            System.out.println("\n>>> LA COMPUTADORA ATACA");
+            motor.atacar(c, j);
+        }
+
+        mostrarResultadoRonda(j, c);
     }
 
     private void mostrarResultadoRonda(Carta j, Carta c) {
-        System.out.println("\n--- RESULTADO ---");
+        System.out.println("\n--- RESULTADO DE LA RONDA ---");
         System.out.println("Tu carta: " + j);
-        System.out.println("Carta computadora: " + c);
+        System.out.println("Carta CPU: " + c);
     }
 
-    private void manejarDerrotaJugador(Jugador jugador, Jugador cpu, Carta cartaJugador, Carta cartaCPU) {
-        System.out.println("\nPerdiste la batalla");
+    private void manejarDerrotaJugador(Jugador jugador, Jugador cpu, Carta cj, Carta cc) {
+        System.out.println("\nPerdiste la ronda.");
 
-        jugador.getPilaDescarte().push(cartaJugador);
-        jugador.getMazo().eliminarCarta(cartaJugador);
+        jugador.getPilaDescarte().push(cj);
+        jugador.getMazo().eliminarCarta(cj);
 
-        cpu.getColaEspera().encolar(cartaCPU);
+        cpu.getColaEspera().encolar(cc);
     }
 
-    private void manejarDerrotaCPU(Jugador jugador, Jugador cpu, Carta cartaJugador, Carta cartaCPU) {
-        System.out.println("\nGanaste la batalla");
+    private void manejarDerrotaCPU(Jugador jugador, Jugador cpu, Carta cj, Carta cc) {
+        System.out.println("\nGanaste la ronda.");
 
-        cpu.getPilaDescarte().push(cartaCPU);
-        cpu.getMazo().eliminarCarta(cartaCPU);
+        cpu.getPilaDescarte().push(cc);
+        cpu.getMazo().eliminarCarta(cc);
 
-        jugador.getColaEspera().encolar(cartaJugador);
+        jugador.getColaEspera().encolar(cj);
     }
-    
-    //obtenemos la siguiente carta del jugador que perdio
+
     private Carta siguienteCarta(Jugador jugador) {
         if (jugador.getMazo().tamaño() == 0) return null;
-        return jugador.getMazo().obtener(0);
+
+        Carta siguiente = jugador.getMazo().obtener(0);
+
+        // Evitar seleccionar carta muerta
+        if (siguiente.getVida() <= 0) {
+            jugador.getMazo().eliminarCarta(siguiente);
+            return siguienteCarta(jugador);
+        }
+        return siguiente;
     }
-    
-    private void mostrarResultadosFinales(Jugador j, int wins, int loses) {
+
+    private void mostrarResultadosFinales(Jugador j, int w, int l) {
         System.out.println("\n=====================");
         System.out.println("RESULTADOS FINALES");
         System.out.println("=====================");
-        System.out.println(j.getNombre() + " Ganó: " + wins);
-        System.out.println(j.getNombre() + " Perdió: " + loses);
+        System.out.println(j.getNombre() + " Gano: " + w);
+        System.out.println(j.getNombre() + " Perdio: " + l);
     }
 }
