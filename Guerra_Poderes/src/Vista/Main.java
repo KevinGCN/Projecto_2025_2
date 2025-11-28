@@ -29,7 +29,7 @@ public class Main {
             System.out.println(i + ". " + jugador.getMazo().obtener(i));
         }
          //5.Llamado de Menu
-         Controlador.Menu menu = new Controlador.Menu();
+         Vista.Menu menu = new Vista.Menu();
          menu.iniciarCombate(jugador, jugador);
         
     }

@@ -1,5 +1,6 @@
-package Controlador;
+package Vista;
 
+import Controlador.MotorBatalla;
 import Modelo.Carta;
 import Modelo.Jugador;
 import java.util.Scanner;
